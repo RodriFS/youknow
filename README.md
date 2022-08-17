@@ -1,8 +1,8 @@
-## You Know (WIP)
+## You Know (WIP)
 Sync your github or gitlab repositories description with your local git description, and display a list of
 directories with their descriptions from the command line
 
-## Usage
+## Usage
 ```
 USAGE:
     yn [OPTIONS] [PATH]
