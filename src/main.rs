@@ -36,9 +36,10 @@ async fn main() {
     let pwd = args.path.clone().unwrap_or(".".to_string());
     let paths = fs::read_dir(&pwd).unwrap();
 
-    let files = parse_files(paths, &args);
+    let mut files = parse_files(paths, &args);
+    files.sort_by_key(|f| f.path.clone());
+
     let files = sync_files(files, &args).await;
-    let mut files = format_files(files, &args);
-    files.sort();
+    let files = format_files(files, &args);
     files.into_iter().for_each(|f| print!("{}", f))
 }

@@ -1,21 +1,24 @@
 use crate::{file::File, Args};
 use colored::Colorize;
 
-fn format_file(mut file: File, args: &Args) -> String {
+fn format_file(file: File, args: &Args) -> String {
+    let mut display = file.name;
     if file.repo.is_some() {
-        file.name = format!("{}", file.name.bold().green());
+        display = format!("{}", display.bold().green());
     } else if file.is_dir {
-        file.name = format!("{}", file.name.bold().cyan());
+        display = format!("{}", display.bold().cyan());
     }
 
+    if args.list {
+        display = format!("{:>5}  {}", file.len, display);
 
-    if args.list && file.repo.is_some() {
-        let d = file.repo.unwrap().description.unwrap_or("No description".to_string());
-        format!("{}, {}\n", file.name, d)
-    } else if args.list {
-        format!("{}\n", file.name)
+        if file.repo.is_some() {
+            let description = file.repo.unwrap().description.unwrap_or("No description".to_string());
+            display = format!("{}, {}", display, description);
+        }
+        format!("{}\n", display)
     } else {
-        format!("{} ", file.name)
+        format!("{} ", display)
     }
 }
 
