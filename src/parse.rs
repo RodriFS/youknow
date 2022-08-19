@@ -30,10 +30,7 @@ pub fn parse_description(mut file: File, args: &Args) -> File {
     file
 }
 
-fn parse_config(mut file: File, args: &Args) -> File {
-    if !args.sync {
-        return file;
-    }
+fn parse_config(mut file: File) -> File {
     let config_path = file.path.join(".git").join("config");
     let config = read_file(config_path);
     file.repo = match config {
@@ -57,6 +54,6 @@ pub fn parse_files(paths: ReadDir, args: &Args) -> Vec<File> {
     paths
         .map(|path| parse_file_with_metadata(path).unwrap_or(File::new_error_file()))
         .filter(|f| args.all || !f.is_hidden)
-        .map(|file| parse_config(file, &args))
+        .map(|file| parse_config(file))
         .collect()
 }

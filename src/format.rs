@@ -10,10 +10,12 @@ fn format_file(file: File, args: &Args) -> String {
     }
 
     if args.list {
-        display = format!("{:>5}  {}", file.len, display);
-
         if file.repo.is_some() {
-            let description = file.repo.unwrap().description.unwrap_or("No description".to_string());
+            let description = file
+                .repo
+                .unwrap()
+                .description
+                .unwrap_or("No description".to_string());
             display = format!("{}, {}", display, description);
         }
         format!("{}\n", display)

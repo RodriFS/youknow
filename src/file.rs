@@ -17,7 +17,6 @@ pub struct File {
     pub is_hidden: bool,
     pub name: String,
     pub is_dir: bool,
-    pub len: u64,
 }
 
 #[derive(Deserialize)]
@@ -37,7 +36,6 @@ impl File {
             is_hidden,
             is_dir,
             repo: None,
-            len: metadata.len(),
         })
     }
 
@@ -48,7 +46,6 @@ impl File {
             is_hidden: false,
             is_dir: false,
             repo: None,
-            len: 0,
         }
     }
 
