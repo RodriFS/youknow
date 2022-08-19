@@ -18,10 +18,8 @@ fn format_file(file: File, args: &Args) -> String {
                 .unwrap_or("No description".to_string());
             display = format!("{}, {}", display, description);
         }
-        format!("{}\n", display)
-    } else {
-        format!("{} ", display)
     }
+    display
 }
 
 pub fn format_files(files: Vec<File>, args: &Args) -> Vec<String> {

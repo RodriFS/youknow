@@ -47,5 +47,10 @@ async fn main() {
         .collect();
 
     let files = format_files(files, &args);
-    files.into_iter().for_each(|f| print!("{}", f))
+
+    if args.list {
+        println!("{}", files.join("\n"));
+    } else {
+        println!("{}", files.join(" "));
+    }
 }
