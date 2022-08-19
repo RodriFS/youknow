@@ -1,9 +1,9 @@
-use std::fs::{DirEntry, self, ReadDir};
+use crate::Args;
+use crate::{errors::Error, file::File, repo::Repo};
+use regex::Regex;
+use std::fs::{self, DirEntry, ReadDir};
 use std::path::PathBuf;
 use std::str;
-use regex::Regex;
-use crate::Args;
-use crate::{repo::Repo,file::File, errors::Error};
 
 fn read_file(path: PathBuf) -> Result<String, Error> {
     let bytes = fs::read(path)?;
@@ -16,7 +16,7 @@ fn parse_file_with_metadata(entry: Result<DirEntry, std::io::Error>) -> Result<F
     File::from(entry)
 }
 
-fn parse_description(mut file: File, args: &Args) -> File {
+pub fn parse_description(mut file: File, args: &Args) -> File {
     if !args.list {
         return file;
     }
@@ -37,22 +37,26 @@ fn parse_config(mut file: File, args: &Args) -> File {
     let config_path = file.path.join(".git").join("config");
     let config = read_file(config_path);
     file.repo = match config {
-        Ok(conf) => Regex::new(r#".*(github|gitlab).*:(.*)/(.*).git"#)
+        Ok(conf) => Regex::new(r#".*(github|gitlab).com[:|/](.*)/(.*)"#)
             .ok()
             .and_then(|regexp| regexp.captures(&conf))
-            .map(|data| Repo::from(&data[1], &data[2], &data[3]))
+            .map(|data| {
+                Repo::from(
+                    &data[1],
+                    &data[2],
+                    &data[3].strip_suffix(".git").unwrap_or(&data[3]),
+                )
+            })
             .or(Some(Repo::local())),
         _ => None,
     };
     file
 }
 
-
 pub fn parse_files(paths: ReadDir, args: &Args) -> Vec<File> {
     paths
         .map(|path| parse_file_with_metadata(path).unwrap_or(File::new_error_file()))
         .filter(|f| args.all || !f.is_hidden)
-        .map(|file| parse_description(file, &args))
         .map(|file| parse_config(file, &args))
         .collect()
 }

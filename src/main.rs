@@ -5,11 +5,11 @@ mod parse;
 mod repo;
 mod sync;
 
-use format::format_files;
-use parse::parse_files;
 use clap::Parser;
-use sync::sync_files;
+use format::format_files;
+use parse::{parse_description, parse_files};
 use std::fs;
+use sync::sync_files;
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
@@ -40,6 +40,12 @@ async fn main() {
     files.sort_by_key(|f| f.path.clone());
 
     let files = sync_files(files, &args).await;
+
+    let files = files
+        .into_iter()
+        .map(|f| parse_description(f, &args))
+        .collect();
+
     let files = format_files(files, &args);
     files.into_iter().for_each(|f| print!("{}", f))
 }
