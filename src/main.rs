@@ -17,11 +17,11 @@ pub struct Args {
     #[clap(value_parser)]
     path: Option<String>,
 
-    /// Do not ignore entries starting with .
+    /// Do not ignore entries starting with a dot
     #[clap(short, long, action)]
     all: bool,
 
-    /// Display files
+    /// Display files as list
     #[clap(short, long, action)]
     list: bool,
 
