@@ -18,3 +18,26 @@ OPTIONS:
     -V, --version    Print version information
 ```
 
+## Examples
+```
+# Downlaod descriptions from github/gitlab into ./.git/description file
+$ yn -s
+```
+
+
+```
+# Download descriptions and reveal files (and hidden files) as a list
+$ yn -lsa
+
+prototype, Repository not linked with origin
+awesome_project, No description
+SoupGB, A gameboy emulator written in rust
+MyDocuments
+```
+
+- If a directory is a repository, but the repository has no remote pointing to github/gitlab, then you'll see
+    "Repository not linked with origin"
+- If a directory is a repository but there's no description in github/gitlab, you'll see "No description"
+- If a directory is a repository and there's a description in github/gitlab, it will be saved in ./.git/description
+    and you'll see it every time you run `yn -l` or `yn -la`
+- If your directory is not a repository, you won't see any text after the directory name
